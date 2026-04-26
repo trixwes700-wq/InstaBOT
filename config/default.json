@@ -33,9 +33,7 @@
   "notes_devUsers": "List of developer IDs with full access (role 4)",
   "whiteListMode": {
     "enable": false,
-    "whiteListIds": [
-      "52943709733"
-    ],
+    "whiteListIds": [],
     "notes": "if you enable this feature, only the ids in the whiteListIds list can use the bot"
   },
   "whiteListModeThread": {
@@ -138,27 +136,3 @@
   "typingIndicator": {
     "enable": true,
     "duration": 500,
-    "notes": "Shows typing indicator before sending messages. duration is in milliseconds (1000 = 1 second). Set enable to false to disable."
-  },
-  "optionsFca": {
-    "online": true,
-    "selfListen": true,
-    "selfListenEvent": true,
-    "listenEvents": true,
-    "listenTyping": true,
-    "updatePresence": false,
-    "autoMarkDelivery": false,
-    "autoMarkRead": true,
-    "autoReconnect": true,
-    "forceLogin": true,
-    "simulateTyping": true,
-    "randomUserAgent": false,
-    "persona": "desktop",
-    "stealthMode": true,
-    "maxConcurrentRequests": 5,
-    "maxRequestsPerMinute": 50,
-    "requestCooldownMs": 60000,
-    "errorCacheTtlMs": 300000,
-    "notes": "nkx-fca options — see node_modules/@neoaz07/nkxica/README.md for full documentation"
-  }
-}
