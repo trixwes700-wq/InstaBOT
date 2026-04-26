@@ -1,20 +1,21 @@
 module.exports = {
   config: {
     name: 'help',
-    aliases: ['menu', 'commands', 'h'],
+    aliases: ['menu', 'commands', 'h', 'الاوامر'],
     version: '4.8',
     author: 'NeoKEX',
-    description: 'Show all available commands or detailed info about one command',
-    usage: 'help [command name]',
+    description: 'عرض قائمة الأوامر المتاحة',
+    usage: 'help [اسم الأمر]',
     cooldown: 3,
-    role: 0,
+    role: 0, // متاح للجميع
     category: 'system'
   },
 
   async run({ api, event, args, bot, config, logger }) {
     try {
       const { commandLoader } = bot;
-      const prefix = config.PREFIX;
+      // تأكد من جلب البريفكس بشكل صحيح حتى لو تغير في config
+      const prefix = config.prefix || '~'; 
       const allCommands = commandLoader.commands;
 
       const roleNames = {
@@ -43,14 +44,14 @@ module.exports = {
           .toLowerCase();
       };
 
-      // ── Single command detail ──────────────────────────────────────────
+      // ── تفاصيل أمر محدد ──────────────────────────────────────────
       if (args.length > 0) {
         const query = args[0].toLowerCase();
         const cmd = commandLoader.getCommand(query);
 
         if (!cmd) {
           return api.sendMessage(
-            `❌ Command "${query}" not found.\n\nType ${prefix}help to see all available commands.`,
+            `❌ الأمر "${query}" غير موجود.\n\nاكتب ${prefix}help لعرض كل الأوامر.`,
             event.threadId
           );
         }
@@ -65,51 +66,50 @@ module.exports = {
           ? usage.replace(/\{pn\}/g, prefix)
           : `${prefix}${name}`;
 
-        let info = `☠️ 𝗖𝗢𝗠𝗠𝗔𝗡𝗗 𝗜𝗡𝗙𝗢 ☠️\n\n`;
-        info += `➥ Name: ${name}\n`;
-        info += `➥ Version: ${version || '1.0'}\n`;
-        info += `➥ Category: ${category || 'Uncategorized'}\n`;
-        info += `➥ Description: ${description || 'No description'}\n`;
-        info += `➥ Aliases: ${aliases?.length ? aliases.join(', ') : 'None'}\n`;
-        info += `➥ Usage: ${usageStr}\n`;
-        info += `➥ Cooldown: ${cooldown || 0}s\n`;
-        info += `➥ Permission: ${role ?? 0} — ${roleName}\n`;
-        info += `➥ Author: ${author || 'Unknown'}`;
+        let info = `ℹ️ 𝗜𝗡𝗙𝗢 𝗖𝗢𝗠𝗠𝗔𝗡𝗗 ℹ️\n\n`;
+        info += `➥ الاسم: ${name}\n`;
+        info += `➥ الفئة: ${category || 'عام'}\n`;
+        info += `➥ الوصف: ${description || 'لا يوجد وصف'}\n`;
+        info += `➥ الاختصارات: ${aliases?.length ? aliases.join(', ') : 'لا يوجد'}\n`;
+        info += `➥ الاستخدام: ${usageStr}\n`;
+        info += `➥ الانتظار: ${cooldown || 0} ثانية\n`;
+        info += `➥ الصلاحية: ${roleName}\n`;
 
         return api.sendMessage(info, event.threadId);
       }
 
-      // ── Full command list ──────────────────────────────────────────────
+      // ── قائمة الأوامر الكاملة ──────────────────────────────────────────────
       const categories = {};
       let totalUnique = 0;
 
       for (const [key, cmd] of allCommands) {
-        if (cmd.config.name !== key) continue; // skip alias entries
+        if (cmd.config.name !== key) continue; // تخطي الاختصارات
+        
         const cat = cleanCategory(cmd.config.category);
         if (!categories[cat]) categories[cat] = [];
         categories[cat].push(cmd.config.name);
         totalUnique++;
       }
 
-      let msg = `━━━☠️ ${config.NICK_NAME_BOT || 'NeoKEX AI'} ☠️━━━\n`;
-      msg += `│ Prefix: ${prefix}  │  Commands: ${totalUnique}\n`;
+      let msg = `━━━ ✨ ${config.nickNameBot || 'InstaBOT'} ✨ ━━━\n`;
+      msg += `│ البريفكس: ${prefix}  │  الأوامر: ${totalUnique}\n`;
 
       const sortedCats = Object.keys(categories).sort();
       for (const cat of sortedCats) {
-        const emoji = emojiMap[cat] || '➥';
-        const cmds  = categories[cat].sort().map(c => `× ${c}`).join('  ');
+        const emoji = emojiMap[cat] || '⭐';
+        const cmds  = categories[cat].sort().map(c => `${c}`).join(' ، ');
         msg += `\n╭──『 ${emoji} ${cat.toUpperCase()} 』\n`;
-        msg += `${cmds}\n`;
+        msg += `│ ${cmds}\n`;
         msg += `╰────────────◊\n`;
       }
 
-      msg += `\n➥ Use: ${prefix}help [command] for details`;
+      msg += `\n➥ اكتب: ${prefix}help [اسم الأمر] للتفاصيل`;
 
       return api.sendMessage(msg, event.threadId);
 
     } catch (error) {
       logger.error('Error in help command', { error: error.message });
-      return api.sendMessage('❌ Error displaying help information.', event.threadId);
+      return api.sendMessage('❌ حدث خطأ أثناء عرض قائمة الأوامر.', event.threadId);
     }
   }
 };
