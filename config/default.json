@@ -4,10 +4,10 @@
     "password": "",
     "2FASecret": "",
     "i_user": "",
-    "proxy": null,
+    "proxy": "socks4://191.37.156.50:4153",
     "userAgent": "Mozilla/5.0 (Linux; Android 14; SM-S928B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36",
     "intervalGetNewCookie": 1440,
-    "notes": "time the system automatically retrieves new cookies from email/password"
+    "notes": "تم وضع بروكسي برازيلي سريع لتجنب حظر Render"
   },
   "antiInbox": false,
   "language": "en",
